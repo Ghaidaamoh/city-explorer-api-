@@ -5,7 +5,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 
-const weather = require('./assetes/weather.json');
+const weather = require('./data/weather.json');
 
 server.use(cors());
 
@@ -24,11 +24,11 @@ server.get('/test', (request, response) => {
 })
 
 
-//localhost:3001/getCityInfo?cityName=Amman
-try {
+//localhost:3005/getCityInfo?cityName=Amman
+
     server.get('/getCityInfo', (req, res) => {
         console.log(req.query);
-        let selectedCity = weather.results.find(city => {
+        let selectedCity = weather.data.find(city => {
             if (city.city_name == req.query.cityName) {
                 return city
             }
@@ -39,21 +39,20 @@ try {
         // res.status(200).send(selectedCity);
         res.status(200).send(cityWeather)
     })
-} catch {
-    res.status(404).send('Error 404 : You send a wrong request')
-}
+
 
 // Error
 server.get('*', (request, response) => {
     response.status(404).send('Not Found')
 })
-server.listen(PORT, () => {
-    console.log(`listening on port ${PORT}`);
 
-})
 class City {
     constructor(date, description) {
         this.date = date;
         this.description = description;
     }
 }
+server.listen(PORT, () => {
+    console.log(`listening on port ${PORT}`);
+
+})
