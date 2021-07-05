@@ -33,11 +33,11 @@ try {
                 return city
             }
         })
-        const cityObj = selectedCity.data.map(day => {
+        const cityWeather = selectedCity.data.map(day => {
             return new City(day.valid_date, day.weather.description)
         })
         // res.status(200).send(selectedCity);
-        res.status(200).send(cityObj)
+        res.status(200).send(cityWeather)
     })
 } catch {
     res.status(404).send('Error 404 : You send a wrong request')
