@@ -3,9 +3,9 @@ const express = require('express');
 const server = express();
 require('dotenv').config();
 const cors = require('cors');
+const axios = require('axios')
 
-
-const weather = require('./data/weather.json');
+// const weather = require('./data/weather.json');
 
 server.use(cors());
 
@@ -18,33 +18,22 @@ server.get('/', (request, response) => {
 })
 
 
-// localhost:3001/test
-server.get('/test', (request, response) => {
-    response.status(200).send('My server is a live')
-})
+// localhost:3005/getCityInfo?cityName=Amman&key=
+server.get('/getCityInfo',getweatherHandler);
 
-
-//localhost:3005/getCityInfo?cityName=Amman
-
-    server.get('/getCityInfo', (req, res) => {
-        console.log(req.query);
-        let selectedCity = weather.find(city => {
-            if (city.city_name == req.query.cityName) {
-                return city
-            }
-        }) 
-        console.log(selectedCity);
-        // res.status(200).send(selectedCity)
-
-        const cityWeather = selectedCity.data.map(day => {
-            return new City(day.valid_date, day.weather.description)
+function getweatherHandler(req, res) {
+    let weatherQuery = req.query.cityName;
+    let url = `https://api.weatherbit.io/v2.0/forecast/daily?city=${weatherQuery}&key=${process.env.WEATHER_API_KEY}`
+    axios
+        .get(url)
+        .then(weatherData => {
+            // console.log(weatherData.data)
+            res.send(weatherData.data.data[0])
         })
-        // res.status(200).send(selectedCity);
-        
-        res.status(200).send(cityWeather)
-         
-    })
-
+        .catch(error => {
+            res.status(500).send(error)
+        })
+}
 
 // Error
 server.get('*', (request, response) => {
