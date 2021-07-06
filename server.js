@@ -28,16 +28,21 @@ server.get('/test', (request, response) => {
 
     server.get('/getCityInfo', (req, res) => {
         console.log(req.query);
-        let selectedCity = weather.data.find(city => {
+        let selectedCity = weather.find(city => {
             if (city.city_name == req.query.cityName) {
                 return city
             }
-        })
+        }) 
+        console.log(selectedCity);
+        // res.status(200).send(selectedCity)
+
         const cityWeather = selectedCity.data.map(day => {
             return new City(day.valid_date, day.weather.description)
         })
         // res.status(200).send(selectedCity);
+        
         res.status(200).send(cityWeather)
+         
     })
 
 
